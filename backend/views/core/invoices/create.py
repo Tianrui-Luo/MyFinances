@@ -1,5 +1,6 @@
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 from backend.models import Invoice, InvoiceItem, Client
@@ -50,7 +51,11 @@ def invoice_page_post(request: HttpRequest):
         account_holder_name=request.POST.get("account_holder_name"),
     )
 
+    print("Test Print")
+    print(timezone.now().date())
+    print(datetime.strptime(invoice.date_due,'%Y-%m-%d'))
     invoice.items.set(invoice_items)
+    payment_status= "overdue" if timezone.now().date() > datetime.strptime(invoice.date_due,'%Y-%m-%d') else "pending"
 
     return redirect("invoices dashboard")
 
