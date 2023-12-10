@@ -212,12 +212,12 @@ class Invoice(models.Model):
 
     )
 
-    def update_payment_status(self):
-        current_time = timezone.now().date()
-        if self.date_due and self.date_due < current_time:
-            self.payment_status = "overdue"
-        else:
-            self.payment_status = "pending"
+    #def update_payment_status(self):
+    #    current_time = timezone.now().date()
+    #    if self.date_due and self.date_due < current_time:
+    #        self.payment_status = "overdue"
+    #    else:
+    #        self.payment_status = "pending"
 
     def __str__(self):
         invoice_id = self.invoice_id or self.id
