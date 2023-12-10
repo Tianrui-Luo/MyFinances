@@ -198,9 +198,10 @@ class Invoice(models.Model):
     logo = models.ImageField(upload_to="invoice_logos", blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
 
-    payment_status = models.CharField(
-        max_length=10, choices=STATUS_CHOICES, default="pending"
-    )
+    #Removed the duplicated definition of "payment_status" variable
+    #payment_status = models.CharField(
+    #    max_length=10, choices=STATUS_CHOICES, default="pending"
+    #)
     items = models.ManyToManyField(InvoiceItem)
 
     date_created = models.DateTimeField(auto_now_add=True)
@@ -208,7 +209,15 @@ class Invoice(models.Model):
     date_issued = models.DateField(blank=True, null=True)
     payment_status = models.CharField(
         max_length=10, choices=STATUS_CHOICES, default="pending"
+
     )
+
+    def update_payment_status(self):
+        current_time = timezone.now().date()
+        if self.date_due and self.date_due < current_time:
+            self.payment_status = "overdue"
+        else:
+            self.payment_status = "pending"
 
     def __str__(self):
         invoice_id = self.invoice_id or self.id
